@@ -70,6 +70,7 @@ public class LoginPage extends VerticalLayout {
 
 
         });
+        processButton.setAutofocus(true);
         formLayout.add(username, password, processButton);
 
         formLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);

@@ -13,6 +13,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Objects;
 
 @PageTitle("Страница админа")
@@ -28,7 +30,10 @@ public class AdminChangePassword extends VerticalLayout {
     private Button processButton = new Button();
     private VerticalLayout formLayout = new VerticalLayout();
 
-    public AdminChangePassword(@Autowired LoginService loginService) {
+    public AdminChangePassword(@Autowired LoginService loginService, HttpServletResponse resp) throws IOException {
+        if(UserSessionInfo.getInstance().getCurrentUser() == null || !UserSessionInfo.getInstance().getCurrentUser().getRole().equals("admin")){
+            resp.sendRedirect("/");
+        }
         this.loginService = loginService;
         add(configureChangePasswordForm());
     }

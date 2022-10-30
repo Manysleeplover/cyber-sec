@@ -1,5 +1,6 @@
 package com.example.application.views.admin;
 
+import com.example.application.bean.UserSessionInfo;
 import com.example.application.entities.User;
 import com.example.application.services.ListService;
 import com.vaadin.flow.component.Text;
@@ -15,6 +16,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 
 @PageTitle("Страница админа")
 @Route(value = "/admin", layout = AdminLayout.class)
@@ -28,7 +32,11 @@ public class AdminView extends VerticalLayout {
 
     private Button addNewUserButton;
 
-    public AdminView(@Autowired ListService listService) {
+    public AdminView(@Autowired ListService listService,
+                     HttpServletResponse resp) throws IOException {
+        if(UserSessionInfo.getInstance().getCurrentUser() == null || !UserSessionInfo.getInstance().getCurrentUser().getRole().equals("admin")){
+            resp.sendRedirect("/");
+        }
         this.listService = listService;
         configureGrid();
         configureAddingUsersButton();

@@ -13,6 +13,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Objects;
 
 
@@ -20,21 +23,24 @@ import java.util.Objects;
 @Route(value = "/user", layout = UserLayout.class)
 public class UserView extends VerticalLayout {
 
-
     private LoginService loginService;
     private ListService listService;
-
     private PasswordField oldPassword = new PasswordField();
     private PasswordField password = new PasswordField();
     private PasswordField repeatPassword = new PasswordField();
-
     private Button processButton = new Button();
     private VerticalLayout formLayout = new VerticalLayout();
 
+
     public UserView(@Autowired LoginService loginService,
-                    @Autowired ListService listService) {
+                    @Autowired ListService listService,
+                    HttpServletResponse resp) throws IOException {
+        if(UserSessionInfo.getInstance().getCurrentUser() == null){
+            resp.sendRedirect("/");
+        }
         this.listService = listService;
         this.loginService = loginService;
+
         add(configureChangePasswordForm());
     }
 

@@ -8,7 +8,7 @@ public class UserSessionInfo {
 
     private static UserSessionInfo userSessionInfo;
 
-    private  User currentUser;
+    private User currentUser = null;
 
     private UserSessionInfo() {
 
@@ -29,7 +29,7 @@ public class UserSessionInfo {
         return currentUser;
     }
 
-    private void cleanCurrentUser() {
+    public void cleanCurrentUser() {
         currentUser = null;
     }
 

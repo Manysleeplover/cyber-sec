@@ -1,6 +1,6 @@
-package com.example.application.views;
+package com.example.application.views.user;
 
-
+import com.example.application.services.ListService;
 import com.example.application.services.LoginService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -14,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
+
 @PageTitle("Страница админа")
-@Route(value = "/admin_change_password")
-public class AdminChangePassword extends VerticalLayout {
+@Route(value = "/user", layout = UserLayout.class)
+public class UserView extends VerticalLayout {
+
 
     private LoginService loginService;
+    private ListService listService;
 
     private TextField username = new TextField();
     private PasswordField oldPassword = new PasswordField();
@@ -28,7 +31,9 @@ public class AdminChangePassword extends VerticalLayout {
     private Button processButton = new Button();
     private VerticalLayout formLayout = new VerticalLayout();
 
-    public AdminChangePassword(@Autowired LoginService loginService) {
+    public UserView(@Autowired LoginService loginService,
+                    @Autowired ListService listService) {
+        this.listService = listService;
         this.loginService = loginService;
         add(configureChangePasswordForm());
     }
@@ -40,13 +45,13 @@ public class AdminChangePassword extends VerticalLayout {
         repeatPassword.setLabel("Подтвердите новый пароль");
         processButton.setText("Войти");
         processButton.addClickListener(x -> {
-            if (loginService.isDetected(username.getValue(), oldPassword.getValue()).equals("admin")) {
+            if (listService.isDetected(username.getValue())) {
                 if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
                     if (loginService.changeAdminPassword(username.getValue(), oldPassword.getValue(), password.getValue())) {
                         Dialog dialog = new Dialog();
                         dialog.add("Пароль успешно изменён");
                         dialog.open();
-                        getUI().get().navigate(AdminView.class);
+                        getUI().get().navigate(UserView.class);
                     }
                 }
             } else {
@@ -64,4 +69,5 @@ public class AdminChangePassword extends VerticalLayout {
         formLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         return formLayout;
     }
+
 }

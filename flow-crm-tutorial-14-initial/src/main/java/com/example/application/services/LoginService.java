@@ -1,11 +1,9 @@
 package com.example.application.services;
 
-import com.example.application.entities.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,16 +15,7 @@ import java.nio.file.Paths;
 public class LoginService {
 
     public String isDetected(String username, String password) {
-        String json = null;
-        try {
-            json = String.join(" ",
-                    Files.readAllLines(
-                            Paths.get("src/main/resources/users.json"),
-                            StandardCharsets.UTF_8)
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String json = getJson();
 
         JSONObject mainObject = new JSONObject(json);
         JSONArray jsonArray = mainObject.getJSONArray("users");
@@ -43,17 +32,7 @@ public class LoginService {
     }
 
     public boolean changeAdminPassword(String username, String oldPassword, String newPassword) {
-        String json = null;
-        File file = new File("src/main/resources/users.json");
-        try {
-            json = String.join(" ",
-                    Files.readAllLines(
-                            Paths.get("src/main/resources/users.json"),
-                            StandardCharsets.UTF_8)
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String json = getJson();
 
         JSONObject mainObject = new JSONObject(json);
         JSONArray jsonArray = mainObject.getJSONArray("users");
@@ -70,6 +49,21 @@ public class LoginService {
             }
         }
         return false;
+    }
+
+    private String getJson(){
+        String json = null;
+        try {
+            json = String.join(" ",
+                    Files.readAllLines(
+                            Paths.get("src/main/resources/users.json"),
+                            StandardCharsets.UTF_8)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return json;
     }
 
 }

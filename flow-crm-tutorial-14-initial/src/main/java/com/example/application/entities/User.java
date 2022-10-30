@@ -10,11 +10,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class User {
+    public User(String username) {
+        this.username = username;
+        this.password = "";
+        this.role = "user";
+        this.isBlocked = false;
+        this.passwordRestriction = false;
+    }
 
     private String username;
     private String password;
-    private String email;
-    private String birthDate;
     private String role;
     private Boolean isBlocked;
     private Boolean passwordRestriction;

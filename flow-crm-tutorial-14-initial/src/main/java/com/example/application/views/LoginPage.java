@@ -1,6 +1,8 @@
 package com.example.application.views;
 
 import com.example.application.services.LoginService;
+import com.example.application.views.admin.AdminView;
+import com.example.application.views.user.UserView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

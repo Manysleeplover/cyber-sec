@@ -1,20 +1,37 @@
 {"users": [
     {
-        "password": "user",
+        "password": "user1",
         "role": "user",
-        "isBlocked": false,
-        "passwordRestriction": false,
-        "birthDate": "22.01.2001",
-        "email": "ioromanov@gmail.com",
+        "isBlocked": true,
+        "passwordRestriction": true,
         "username": "user"
     },
     {
-        "password": "admin1",
+        "password": "admin",
         "role": "admin",
         "isBlocked": false,
         "passwordRestriction": false,
-        "birthDate": "26.12.2001",
-        "email": "zsiosafova@gmail.com",
         "username": "admin"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "Илья"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "Петя"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "Жанна"
     }
 ]}

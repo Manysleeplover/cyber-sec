@@ -25,16 +25,14 @@ import java.io.IOException;
 public class AdminView extends VerticalLayout {
 
 
-    private Grid<User> userGrid = new Grid<>(User.class, false);
-
-    private VerticalLayout gridLayout = new VerticalLayout();
-    private ListService listService;
-
+    private final Grid<User> userGrid = new Grid<>(User.class, false);
+    private final ListService listService;
     private Button addNewUserButton;
 
     public AdminView(@Autowired ListService listService,
                      HttpServletResponse resp) throws IOException {
         if(UserSessionInfo.getInstance().getCurrentUser() == null || !UserSessionInfo.getInstance().getCurrentUser().getRole().equals("admin")){
+            UserSessionInfo.getInstance().cleanCurrentUser();
             resp.sendRedirect("/");
         }
         this.listService = listService;

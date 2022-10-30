@@ -7,7 +7,7 @@
         "username": "user"
     },
     {
-        "password": "admin",
+        "password": "admin1",
         "role": "admin",
         "isBlocked": false,
         "passwordRestriction": false,

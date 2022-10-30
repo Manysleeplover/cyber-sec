@@ -21,17 +21,17 @@ import java.util.Objects;
 @Route(value = "/admin_change_password", layout = AdminLayout.class)
 public class AdminChangePassword extends VerticalLayout {
 
-    private LoginService loginService;
+    private final LoginService loginService;
 
-    private PasswordField oldPassword = new PasswordField();
-    private PasswordField password = new PasswordField();
-    private PasswordField repeatPassword = new PasswordField();
-
-    private Button processButton = new Button();
-    private VerticalLayout formLayout = new VerticalLayout();
+    private final PasswordField oldPassword = new PasswordField();
+    private final PasswordField password = new PasswordField();
+    private final PasswordField repeatPassword = new PasswordField();
+    private final Button processButton = new Button();
+    private final VerticalLayout formLayout = new VerticalLayout();
 
     public AdminChangePassword(@Autowired LoginService loginService, HttpServletResponse resp) throws IOException {
         if(UserSessionInfo.getInstance().getCurrentUser() == null || !UserSessionInfo.getInstance().getCurrentUser().getRole().equals("admin")){
+            UserSessionInfo.getInstance().cleanCurrentUser();
             resp.sendRedirect("/");
         }
         this.loginService = loginService;

@@ -2,6 +2,7 @@ package com.example.application.views.admin;
 
 
 import com.example.application.bean.UserSessionInfo;
+import com.example.application.views.LoginPage;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -42,6 +43,7 @@ public class AdminLayout extends AppLayout {
             try {
                 (((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()).logout();
                 UserSessionInfo.getInstance().cleanCurrentUser();
+                getUI().get().navigate(LoginPage.class);
             } catch (ServletException ex) {
                 throw new RuntimeException(ex);
             }

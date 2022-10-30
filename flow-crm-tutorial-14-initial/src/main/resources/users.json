@@ -1,6 +1,6 @@
 {"users": [
     {
-        "password": "user1",
+        "password": "user",
         "role": "user",
         "isBlocked": true,
         "passwordRestriction": true,
@@ -16,22 +16,8 @@
     {
         "password": "",
         "role": "user",
-        "isBlocked": false,
-        "passwordRestriction": false,
-        "username": "Илья"
-    },
-    {
-        "password": "",
-        "role": "user",
-        "isBlocked": false,
-        "passwordRestriction": false,
+        "isBlocked": true,
+        "passwordRestriction": true,
         "username": "Петя"
-    },
-    {
-        "password": "",
-        "role": "user",
-        "isBlocked": false,
-        "passwordRestriction": false,
-        "username": "Жанна"
     }
 ]}

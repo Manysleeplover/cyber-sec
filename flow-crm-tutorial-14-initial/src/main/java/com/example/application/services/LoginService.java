@@ -1,5 +1,6 @@
 package com.example.application.services;
 
+import com.example.application.entities.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,28 @@ public class LoginService {
         }
         return false;
     }
+
+    public User getUser(String username, String password){
+        String json = getJson();
+        User user = new User();
+        JSONObject mainObject = new JSONObject(json);
+        JSONArray jsonArray = mainObject.getJSONArray("users");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).get("username").equals(username)
+                    && jsonArray.getJSONObject(i).get("password").equals(password)) {
+                user.setRole(jsonArray.getJSONObject(i).get("role").toString());
+                user.setPassword(jsonArray.getJSONObject(i).get("password").toString());
+                user.setIsBlocked((Boolean) jsonArray.getJSONObject(i).get("isBlocked"));
+                user.setPasswordRestriction(Boolean.valueOf(jsonArray.getJSONObject(i).get("passwordRestriction").toString()));
+                user.setUsername(jsonArray.getJSONObject(i).get("username").toString());
+            }
+        }
+        return user;
+    }
+
+
+
+
 
     private String getJson(){
         String json = null;

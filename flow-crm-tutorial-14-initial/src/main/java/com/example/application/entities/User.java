@@ -24,4 +24,5 @@ public class User {
     private Boolean isBlocked;
     private Boolean passwordRestriction;
 
+
 }

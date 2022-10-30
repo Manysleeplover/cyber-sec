@@ -1,0 +1,20 @@
+{"users": [
+    {
+        "password": "user",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "birthDate": "22.01.2001",
+        "email": "ioromanov@gmail.com",
+        "username": "user"
+    },
+    {
+        "password": "admin1",
+        "role": "admin",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "birthDate": "26.12.2001",
+        "email": "zsiosafova@gmail.com",
+        "username": "admin"
+    }
+]}

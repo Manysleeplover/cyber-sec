@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.bean.UserSessionInfo;
+import com.example.application.entities.User;
 import com.example.application.services.ListService;
 import com.example.application.services.LoginService;
 import com.example.application.views.admin.AdminView;
@@ -21,15 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "")
 public class LoginPage extends VerticalLayout {
 
-    private LoginService loginService;
-    private ListService listService;
-    private TextField username = new TextField();
-    private PasswordField password = new PasswordField();
-
-    private Button processButton = new Button();
-    private VerticalLayout formLayout = new VerticalLayout();
-
-
+    private final LoginService loginService;
+    private final ListService listService;
+    private final TextField username = new TextField();
+    private final PasswordField password = new PasswordField();
+    private final Button processButton = new Button();
+    private final VerticalLayout formLayout = new VerticalLayout();
 
     public LoginPage(@Autowired LoginService loginService,
                      @Autowired ListService listService) {
@@ -45,7 +43,6 @@ public class LoginPage extends VerticalLayout {
         password.setLabel("Пароль");
         password.setErrorMessage("Неверный пароль, повторите еще");
 
-
         processButton.setText("Войти");
         processButton.addClickListener(x -> {
             if (!listService.isDetected(username.getValue())) {
@@ -56,8 +53,15 @@ public class LoginPage extends VerticalLayout {
                     getUI().get().navigate(AdminView.class);
                 }
                 if (loginService.isDetected(username.getValue(), password.getValue()).equals("user")) {
-                    UserSessionInfo.getInstance().setCurrentUser(loginService.getUser(username.getValue(), password.getValue()));
-                    getUI().get().navigate(UserView.class);
+                    User user = loginService.getUser(username.getValue(), password.getValue());
+                    if(user.getIsBlocked()){
+                        Dialog dialog = new Dialog();
+                        dialog.add("Аккаунт заблокирован");
+                        dialog.open();
+                    } else{
+                        UserSessionInfo.getInstance().setCurrentUser(user);
+                        getUI().get().navigate(UserView.class);
+                    }
                 }
                 if (loginService.isDetected(username.getValue(), password.getValue()).equals("none")) {
                     username.clear();
@@ -67,8 +71,6 @@ public class LoginPage extends VerticalLayout {
                     dialog.open();
                 }
             }
-
-
         });
         processButton.setAutofocus(true);
         formLayout.add(username, password, processButton);
@@ -76,6 +78,4 @@ public class LoginPage extends VerticalLayout {
         formLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         return formLayout;
     }
-
-
 }

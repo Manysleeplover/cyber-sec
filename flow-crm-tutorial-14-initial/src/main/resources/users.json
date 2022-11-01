@@ -1,9 +1,9 @@
 {"users": [
     {
-        "password": "user1",
+        "password": "uuuu",
         "role": "user",
         "isBlocked": false,
-        "passwordRestriction": false,
+        "passwordRestriction": true,
         "username": "user"
     },
     {
@@ -26,5 +26,12 @@
         "isBlocked": false,
         "passwordRestriction": false,
         "username": "Вася"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "1"
     }
 ]}

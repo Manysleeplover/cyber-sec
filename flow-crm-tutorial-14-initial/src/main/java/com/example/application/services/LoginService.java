@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class LoginService {
@@ -52,7 +54,7 @@ public class LoginService {
         return false;
     }
 
-    public User getUser(String username, String password){
+    public User getUser(String username, String password) {
         String json = getJson();
         User user = new User();
         JSONObject mainObject = new JSONObject(json);
@@ -70,11 +72,30 @@ public class LoginService {
         return user;
     }
 
+    public boolean validateUserPassword(String password) {
+        password = password.toLowerCase();
+
+        Map<Character, Integer> countOfChars = new HashMap<>();
+        char[] arr = password.toCharArray();
+        for (Character c : arr) {
+            if (!countOfChars.containsKey(c)) {
+                countOfChars.put(c, 1);
+            } else {
+                int i = countOfChars.get(c);
+                i++;
+                countOfChars.put(c, i);
+            }
+
+            if (countOfChars.get(c) > 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 
-
-
-    private String getJson(){
+    private String getJson() {
         String json = null;
         try {
             json = String.join(" ",

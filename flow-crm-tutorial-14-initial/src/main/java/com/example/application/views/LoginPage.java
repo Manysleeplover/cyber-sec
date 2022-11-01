@@ -42,6 +42,7 @@ public class LoginPage extends VerticalLayout {
 
         password.setLabel("Пароль");
         password.setErrorMessage("Неверный пароль, повторите еще");
+        password.setRevealButtonVisible(false);
 
         processButton.setText("Войти");
         processButton.addClickListener(x -> {
@@ -54,13 +55,21 @@ public class LoginPage extends VerticalLayout {
                 }
                 if (loginService.isDetected(username.getValue(), password.getValue()).equals("user")) {
                     User user = loginService.getUser(username.getValue(), password.getValue());
-                    if(user.getIsBlocked()){
+                    if (user.getIsBlocked()) {
                         Dialog dialog = new Dialog();
                         dialog.add("Аккаунт заблокирован");
                         dialog.open();
-                    } else{
-                        UserSessionInfo.getInstance().setCurrentUser(user);
-                        getUI().get().navigate(UserView.class);
+                    } else {
+                        if (user.getPasswordRestriction()) {
+                            password.setHelperText("Символы не должны повторяться");
+                            if(loginService.validateUserPassword(password.getValue())){
+                                UserSessionInfo.getInstance().setCurrentUser(user);
+                                getUI().get().navigate(UserView.class);
+                            }
+                        } else {
+                            UserSessionInfo.getInstance().setCurrentUser(user);
+                            getUI().get().navigate(UserView.class);
+                        }
                     }
                 }
                 if (loginService.isDetected(username.getValue(), password.getValue()).equals("none")) {

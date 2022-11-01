@@ -47,8 +47,11 @@ public class UserView extends VerticalLayout {
     private VerticalLayout configureChangePasswordForm() {
 
         oldPassword.setLabel("Введите старый пароль");
+        oldPassword.setRevealButtonVisible(false);
         password.setLabel("Введите новый пароль");
+        password.setRevealButtonVisible(false);
         repeatPassword.setLabel("Подтвердите новый пароль");
+        repeatPassword.setRevealButtonVisible(false);
         processButton.setText("Изменить");
         processButton.addClickListener(x -> {
             if (listService.isDetected(UserSessionInfo.getInstance().getCurrentUser().getUsername())) {

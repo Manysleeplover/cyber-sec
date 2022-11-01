@@ -1,6 +1,6 @@
 {"users": [
     {
-        "password": "uuuu",
+        "password": "user",
         "role": "user",
         "isBlocked": false,
         "passwordRestriction": true,

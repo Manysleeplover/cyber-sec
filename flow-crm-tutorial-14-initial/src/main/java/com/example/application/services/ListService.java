@@ -106,6 +106,4 @@ public class ListService {
 
         return json;
     }
-
-
 }

@@ -46,6 +46,7 @@ public class LoginPage extends VerticalLayout {
 
         processButton.setText("Войти");
         processButton.addClickListener(x -> {
+            password.setHelperText("");
             if (!listService.isDetected(username.getValue())) {
                 username.setInvalid(true);
             } else {
@@ -65,6 +66,14 @@ public class LoginPage extends VerticalLayout {
                             if(loginService.validateUserPassword(password.getValue())){
                                 UserSessionInfo.getInstance().setCurrentUser(user);
                                 getUI().get().navigate(UserView.class);
+                            } else {
+                                Button redirectButton = new Button();
+                                redirectButton.addClickListener(event-> getUI().get().navigate(ChangePasswordView.class));
+                                redirectButton.setText("Сменить пароль");
+                                Dialog dialog = new Dialog();
+                                dialog.add("Символы не должны повторяться");
+                                dialog.add(redirectButton);
+                                dialog.open();
                             }
                         } else {
                             UserSessionInfo.getInstance().setCurrentUser(user);

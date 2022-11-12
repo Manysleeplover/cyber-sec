@@ -47,9 +47,9 @@ public class AdminChangePassword extends VerticalLayout {
         repeatPassword.setRevealButtonVisible(false);
         processButton.setText("Изменить");
         processButton.addClickListener(x -> {
-            if (loginService.isDetected(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue()).equals("admin")) {
+            if (loginService.getUserRole(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue()).equals("admin")) {
                 if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                    if (loginService.changeAdminPassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
+                    if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
                         Dialog dialog = new Dialog();
                         dialog.add("Пароль успешно изменён");
                         dialog.open();

@@ -4,6 +4,9 @@ import com.example.application.entities.User;
 import org.springframework.context.annotation.Bean;
 
 
+/**
+ * Информация о текущей сессии
+ */
 public class UserSessionInfo {
 
     private static UserSessionInfo userSessionInfo;

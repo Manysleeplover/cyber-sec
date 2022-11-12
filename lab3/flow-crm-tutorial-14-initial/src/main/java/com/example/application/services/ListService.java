@@ -14,13 +14,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис для получения данных о пользователе
+ */
 @Service
 public class ListService {
 
     public ListService() {
     }
 
-
+    /**
+     * Получение списка пользователей из файла
+     * @return - список пользователей
+     */
     public List<User> getListWithUsers() {
         String json = getJson();
 
@@ -40,6 +46,13 @@ public class ListService {
         return users;
     }
 
+    /**
+     * Метод изменения параметров пользователей
+     * @param user - пользователь, для которого нужно изменить параметры
+     * @param isBl - флаг для определения пользователя
+     * @param resrtPswrd - флаг для ограничения на проль
+     * @return - получилось ли выполнить операцию
+     */
     public boolean changeParams(User user, String isBl, String resrtPswrd) {
         String json = getJson();
 
@@ -62,6 +75,11 @@ public class ListService {
         return false;
     }
 
+    /**
+     * Метод добавления нового пользователя
+     * @param username - имя пользователя, пароль затается по умолчанию строкой с нелувым значением
+     * @return
+     */
     public boolean addUser(String username) {
         String json = getJson();
 
@@ -78,6 +96,11 @@ public class ListService {
     }
 
 
+    /**
+     * Метод, определяющий, существует ли пользователь
+     * @param username - имя пользователя
+     * @return
+     */
     public Boolean isDetected(String username) {
         String json = getJson();
 
@@ -92,6 +115,10 @@ public class ListService {
     }
 
 
+    /**
+     * Метод получения json из файла
+     * @return - строку с json
+     */
     private String getJson() {
         String json = null;
         try {

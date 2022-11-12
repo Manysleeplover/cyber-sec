@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Пользователь
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

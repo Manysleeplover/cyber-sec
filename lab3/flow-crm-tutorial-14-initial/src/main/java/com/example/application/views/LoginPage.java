@@ -50,12 +50,12 @@ public class LoginPage extends VerticalLayout {
             if (!listService.isDetected(username.getValue())) {
                 username.setInvalid(true);
             } else {
-                if (loginService.isDetected(username.getValue(), password.getValue()).equals("admin")) {
-                    UserSessionInfo.getInstance().setCurrentUser(loginService.getNewUser(username.getValue(), password.getValue()));
+                if (loginService.getUserRole(username.getValue(), password.getValue()).equals("admin")) {
+                    UserSessionInfo.getInstance().setCurrentUser(loginService.getUser(username.getValue(), password.getValue()));
                     getUI().get().navigate(AdminView.class);
                 }
-                if (loginService.isDetected(username.getValue(), password.getValue()).equals("user")) {
-                    User user = loginService.getNewUser(username.getValue(), password.getValue());
+                if (loginService.getUserRole(username.getValue(), password.getValue()).equals("user")) {
+                    User user = loginService.getUser(username.getValue(), password.getValue());
                     if (user.getIsBlocked()) {
                         Dialog dialog = new Dialog();
                         dialog.add("Аккаунт заблокирован");
@@ -81,7 +81,7 @@ public class LoginPage extends VerticalLayout {
                         }
                     }
                 }
-                if (loginService.isDetected(username.getValue(), password.getValue()).equals("none")) {
+                if (loginService.getUserRole(username.getValue(), password.getValue()).equals("none")) {
                     username.clear();
                     password.clear();
                     Dialog dialog = new Dialog();

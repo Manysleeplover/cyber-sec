@@ -52,7 +52,7 @@ public class ChangePasswordView extends VerticalLayout {
                 if (loginService.getUser(username.getValue()).getPasswordRestriction()) {
                     if (loginService.validateUserPassword(password.getValue())) {
                         if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                            if (loginService.changeAdminPassword(username.getValue(), oldPassword.getValue(), password.getValue())) {
+                            if (loginService.changePassword(username.getValue(), oldPassword.getValue(), password.getValue())) {
                                 Dialog dialog = new Dialog();
                                 dialog.add("Пароль успешно изменён");
                                 dialog.open();
@@ -66,7 +66,7 @@ public class ChangePasswordView extends VerticalLayout {
                     }
                 } else {
                     if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                        if (loginService.changeAdminPassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
+                        if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
                             Dialog dialog = new Dialog();
                             dialog.add("Пароль успешно изменён");
                             dialog.open();

@@ -56,7 +56,7 @@ public class UserView extends VerticalLayout {
         processButton.addClickListener(x -> {
             if (listService.isDetected(UserSessionInfo.getInstance().getCurrentUser().getUsername())) {
                 if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                    if (loginService.changeAdminPassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
+                    if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
                         Dialog dialog = new Dialog();
                         dialog.add("Пароль успешно изменён");
                         dialog.open();

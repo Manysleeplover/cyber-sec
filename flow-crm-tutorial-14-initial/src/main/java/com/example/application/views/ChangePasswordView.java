@@ -31,7 +31,7 @@ public class ChangePasswordView extends VerticalLayout {
 
 
     public ChangePasswordView(@Autowired LoginService loginService,
-                    @Autowired ListService listService){
+                              @Autowired ListService listService) {
         this.listService = listService;
         this.loginService = loginService;
 
@@ -49,12 +49,29 @@ public class ChangePasswordView extends VerticalLayout {
         processButton.setText("Изменить");
         processButton.addClickListener(x -> {
             if (listService.isDetected(username.getValue())) {
-                if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                    if (loginService.changeAdminPassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
+                if (loginService.getUser(username.getValue()).getPasswordRestriction()) {
+                    if (loginService.validateUserPassword(password.getValue())) {
+                        if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
+                            if (loginService.changeAdminPassword(username.getValue(), oldPassword.getValue(), password.getValue())) {
+                                Dialog dialog = new Dialog();
+                                dialog.add("Пароль успешно изменён");
+                                dialog.open();
+                                getUI().get().navigate(LoginPage.class);
+                            }
+                        }
+                    } else {
                         Dialog dialog = new Dialog();
-                        dialog.add("Пароль успешно изменён");
+                        dialog.add("Символы не должны повторяться");
                         dialog.open();
-                        getUI().get().navigate(LoginPage.class);
+                    }
+                } else {
+                    if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
+                        if (loginService.changeAdminPassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
+                            Dialog dialog = new Dialog();
+                            dialog.add("Пароль успешно изменён");
+                            dialog.open();
+                            getUI().get().navigate(LoginPage.class);
+                        }
                     }
                 }
             } else {

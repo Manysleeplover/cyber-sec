@@ -1,6 +1,7 @@
 package com.example.application.services;
 
 import com.example.application.entities.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class LoginService {
         return false;
     }
 
-    public User getUser(String username, String password) {
+    public User getNewUser(String username, String password) {
         String json = getJson();
         User user = new User();
         JSONObject mainObject = new JSONObject(json);
@@ -71,6 +72,25 @@ public class LoginService {
         }
         return user;
     }
+
+    public User getUser(String username) {
+        String json = getJson();
+        User user = new User();
+        JSONObject mainObject = new JSONObject(json);
+        JSONArray jsonArray = mainObject.getJSONArray("users");
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).get("username").equals(username)) {
+                user.setRole(jsonArray.getJSONObject(i).get("role").toString());
+                user.setPassword(jsonArray.getJSONObject(i).get("password").toString());
+                user.setIsBlocked((Boolean) jsonArray.getJSONObject(i).get("isBlocked"));
+                user.setPasswordRestriction(Boolean.valueOf(jsonArray.getJSONObject(i).get("passwordRestriction").toString()));
+                user.setUsername(jsonArray.getJSONObject(i).get("username").toString());
+            }
+        }
+        return user;
+    }
+
 
     public boolean validateUserPassword(String password) {
         password = password.toLowerCase();

@@ -1,9 +1,9 @@
 {"users": [
     {
-        "password": "user",
+        "password": "useru",
         "role": "user",
         "isBlocked": false,
-        "passwordRestriction": true,
+        "passwordRestriction": false,
         "username": "user"
     },
     {

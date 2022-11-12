@@ -1,0 +1,37 @@
+{"users": [
+    {
+        "password": "useru",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "user"
+    },
+    {
+        "password": "admin1",
+        "role": "admin",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "admin"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "Петя"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "Вася"
+    },
+    {
+        "password": "",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "1"
+    }
+]}

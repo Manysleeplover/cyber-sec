@@ -1,112 +1,77 @@
 package ru.romanov.tests.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
-import static ru.romanov.tests.utils.JsonUtils.getJson;
+import static ru.romanov.tests.utils.FileInputUtils.getFile;
+import static ru.romanov.tests.utils.FileInputUtils.getJson;
 
 
 @Service
 @Slf4j
 public class CryptoService {
 
-    private String pathToFile = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/src/users.json";
-
     public boolean encryptFile(String userKeys) {
         log.info("Пришёл ключ: " + userKeys);
+        String pathToFile = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/src/users.json";
         String json = getJson(pathToFile);
-        byte[] arrJson = json.getBytes(StandardCharsets.UTF_8);
-        byte[] arrUserKey = userKeys.getBytes(StandardCharsets.UTF_8);
-        byte[] cipherJson = null;
-
-        try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
 
-            String algorithm = "AES";
-            SecretKeySpec key = new SecretKeySpec(arrUserKey, algorithm);
-
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            log.info("Инициализируем шифровальщик");
-
-            cipherJson = cipher.doFinal(arrJson);
-            log.info("Зашифровали файл");
-
-
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
-                 BadPaddingException e) {
-            throw new RuntimeException(e);
-        }
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encoded = encoder.encodeToString(json.getBytes());
 
         /*"/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files"*/
 
         String FILE_PATH = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/src/cipherFile.txt";
 
-        try (FileOutputStream outputStream = new FileOutputStream(FILE_PATH)) {
+        try (PrintWriter out = new PrintWriter(new FileWriter(FILE_PATH))) {
             FileChannel.open(Paths.get(FILE_PATH), StandardOpenOption.WRITE).truncate(0).close();
-            outputStream.write(cipherJson);
+            out.write(encoded);
             log.info("Записали шифрованные данные во временный файл cipherFile.txt");
             return true;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     public boolean decryptFile(String userKeys) {
         log.info("Пришёл ключ: " + userKeys);
-        /**
-         *
-         */
-        byte[] arrUserKey = userKeys.getBytes(StandardCharsets.UTF_8);
-        byte[] cipherJson = null;
-        byte[] array = new byte[0];
-        try {
-            array = Files.readAllBytes(Paths.get("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/src/cipherFile.txt"));
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        String SRC_FILE_PATH = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/src/cipherFile.txt";
+
+        String src = getFile(SRC_FILE_PATH);
 
 
-            String algorithm = "AES";
-            SecretKeySpec key = new SecretKeySpec(arrUserKey, algorithm);
-
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            log.info("Инициализируем дешифровальщик");
-
-            cipherJson = cipher.doFinal(array);
-            log.info("Дешифровали файл");
-        } catch (IOException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException |
-                 BadPaddingException | InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-
-
-
+        Base64.Decoder decoder = Base64.getDecoder();
+        String decoded = new String(decoder.decode(src));
+        JSONObject jsonObject = new JSONObject(decoded);
 
         /*"/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files"*/
 
         String FILE_PATH = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json";
 
-        try (FileOutputStream outputStream = new FileOutputStream(FILE_PATH)) {
+        try (PrintWriter out = new PrintWriter(new FileWriter(FILE_PATH))) {
             FileChannel.open(Paths.get(FILE_PATH), StandardOpenOption.WRITE).truncate(0).close();
-            outputStream.write(cipherJson);
+            out.write(jsonObject.toString(4));
             log.info("Записали дешифрованные данные во временный файл users.json");
             return true;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean isExpectedPassword(String password) {
+        return getFile("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/password/pswrd.txt").equals(password);
     }
 
 
@@ -120,4 +85,12 @@ public class CryptoService {
         }
     }
 
+    public boolean clearTempFiles(){
+        try {
+            Files.delete(Path.of("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json"));
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

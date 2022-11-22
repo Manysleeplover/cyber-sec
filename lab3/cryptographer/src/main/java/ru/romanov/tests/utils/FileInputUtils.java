@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class JsonUtils {
+public class FileInputUtils {
     /**
      * Получаем json
      */
@@ -23,5 +23,20 @@ public class JsonUtils {
         }
 
         return json;
+    }
+
+    public static String getFile(String path) {
+        String inner = null;
+        try {
+            inner = String.join(" ",
+                    Files.readAllLines(
+                            Paths.get(path),
+                            StandardCharsets.UTF_8)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return inner;
     }
 }

@@ -1,6 +1,9 @@
 package com.example.application.services;
 
 import com.example.application.entities.User;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.TypeAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ public class ListService {
      * Получение списка пользователей из файла
      * @return - список пользователей
      */
-    public List<User> getListWithUsers() {
+    public List<User> getListWithUsers() throws IOException {
         String json = getJson();
 
         List<User> users = new ArrayList<>();
@@ -53,7 +56,7 @@ public class ListService {
      * @param resrtPswrd - флаг для ограничения на проль
      * @return - получилось ли выполнить операцию
      */
-    public boolean changeParams(User user, String isBl, String resrtPswrd) {
+    public boolean changeParams(User user, String isBl, String resrtPswrd) throws IOException {
         String json = getJson();
 
         JSONObject mainObject = new JSONObject(json);
@@ -80,7 +83,7 @@ public class ListService {
      * @param username - имя пользователя, пароль затается по умолчанию строкой с нелувым значением
      * @return
      */
-    public boolean addUser(String username) {
+    public boolean addUser(String username) throws IOException {
         String json = getJson();
 
         JSONObject mainObject = new JSONObject(json);
@@ -101,7 +104,7 @@ public class ListService {
      * @param username - имя пользователя
      * @return
      */
-    public Boolean isDetected(String username) {
+    public Boolean isDetected(String username) throws IOException {
         String json = getJson();
 
         JSONObject mainObject = new JSONObject(json);
@@ -119,7 +122,7 @@ public class ListService {
      * Метод получения json из файла
      * @return - строку с json
      */
-    private String getJson() {
+    private String getJson() throws IOException {
         String json = null;
         try {
             json = String.join(" ",
@@ -130,6 +133,9 @@ public class ListService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        TypeAdapter<JsonElement> strictAdapter = new Gson().getAdapter(JsonElement.class);
+        strictAdapter.fromJson(json);
 
         return json;
     }

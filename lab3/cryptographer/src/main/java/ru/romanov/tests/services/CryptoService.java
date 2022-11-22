@@ -22,7 +22,7 @@ public class CryptoService {
 
     public boolean encryptFile(String userKeys) {
         log.info("Пришёл ключ: " + userKeys);
-        String pathToFile = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/src/users.json";
+        String pathToFile = "/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json";
         String json = getJson(pathToFile);
 
 

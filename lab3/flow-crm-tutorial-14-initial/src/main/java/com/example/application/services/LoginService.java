@@ -2,6 +2,10 @@ package com.example.application.services;
 
 import com.example.application.entities.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.TypeAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -20,12 +24,18 @@ public class LoginService {
 
     /**
      * Возращает роль пользователя
+     *
      * @param username - имя пользователя
      * @param password - пароль пользователя
      * @return - роль пользователя
      */
     public String getUserRole(String username, String password) {
-        String json = getJson();
+        String json = null;
+        try {
+            json = getJson();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         JSONObject mainObject = new JSONObject(json);
         JSONArray jsonArray = mainObject.getJSONArray("users");
@@ -43,13 +53,19 @@ public class LoginService {
 
     /**
      * Смена пароля
-     * @param username - имя пользователя
+     *
+     * @param username    - имя пользователя
      * @param oldPassword - старый пароль
      * @param newPassword - новый пароль
      * @return - получилось ли выполнить операцию
      */
     public boolean changePassword(String username, String oldPassword, String newPassword) {
-        String json = getJson();
+        String json = null;
+        try {
+            json = getJson();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         JSONObject mainObject = new JSONObject(json);
         JSONArray jsonArray = mainObject.getJSONArray("users");
@@ -70,12 +86,18 @@ public class LoginService {
 
     /**
      * Получаение пользователя по паролю и логину
+     *
      * @param username
      * @param password
      * @return
      */
     public User getUser(String username, String password) {
-        String json = getJson();
+        String json = null;
+        try {
+            json = getJson();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         User user = new User();
         JSONObject mainObject = new JSONObject(json);
         JSONArray jsonArray = mainObject.getJSONArray("users");
@@ -94,11 +116,17 @@ public class LoginService {
 
     /**
      * Получение пользователя по логину
+     *
      * @param username
      * @return
      */
     public User getUser(String username) {
-        String json = getJson();
+        String json = null;
+        try {
+            json = getJson();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         User user = new User();
         JSONObject mainObject = new JSONObject(json);
         JSONArray jsonArray = mainObject.getJSONArray("users");
@@ -118,6 +146,7 @@ public class LoginService {
 
     /**
      * Метод валидации пароля, определяет, есть ли повторяющиеся символы в строке
+     *
      * @param password - пароль
      * @return
      */
@@ -145,9 +174,10 @@ public class LoginService {
 
     /**
      * Получаем json
+     *
      * @return
      */
-    private String getJson() {
+    private String getJson() throws IOException {
         String json = null;
         try {
             json = String.join(" ",
@@ -158,6 +188,9 @@ public class LoginService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        TypeAdapter<JsonElement> strictAdapter = new Gson().getAdapter(JsonElement.class);
+        strictAdapter.fromJson(json);
 
         return json;
     }

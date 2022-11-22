@@ -13,6 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @PageTitle("Смена пароля")
@@ -48,39 +49,43 @@ public class ChangePasswordView extends VerticalLayout {
         repeatPassword.setRevealButtonVisible(false);
         processButton.setText("Изменить");
         processButton.addClickListener(x -> {
-            if (listService.isDetected(username.getValue())) {
-                if (loginService.getUser(username.getValue()).getPasswordRestriction()) {
-                    if (loginService.validateUserPassword(password.getValue())) {
+            try {
+                if (listService.isDetected(username.getValue())) {
+                    if (loginService.getUser(username.getValue()).getPasswordRestriction()) {
+                        if (loginService.validateUserPassword(password.getValue())) {
+                            if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
+                                if (loginService.changePassword(username.getValue(), oldPassword.getValue(), password.getValue())) {
+                                    Dialog dialog = new Dialog();
+                                    dialog.add("Пароль успешно изменён");
+                                    dialog.open();
+                                    getUI().get().navigate(LoginPage.class);
+                                }
+                            }
+                        } else {
+                            Dialog dialog = new Dialog();
+                            dialog.add("Символы не должны повторяться");
+                            dialog.open();
+                        }
+                    } else {
                         if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                            if (loginService.changePassword(username.getValue(), oldPassword.getValue(), password.getValue())) {
+                            if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
                                 Dialog dialog = new Dialog();
                                 dialog.add("Пароль успешно изменён");
                                 dialog.open();
                                 getUI().get().navigate(LoginPage.class);
                             }
                         }
-                    } else {
-                        Dialog dialog = new Dialog();
-                        dialog.add("Символы не должны повторяться");
-                        dialog.open();
                     }
                 } else {
-                    if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                        if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
-                            Dialog dialog = new Dialog();
-                            dialog.add("Пароль успешно изменён");
-                            dialog.open();
-                            getUI().get().navigate(LoginPage.class);
-                        }
-                    }
+                    oldPassword.clear();
+                    password.clear();
+                    repeatPassword.clear();
+                    Dialog dialog = new Dialog();
+                    dialog.add("Что-то пошло не так, попробуйте еще раз");
+                    dialog.open();
                 }
-            } else {
-                oldPassword.clear();
-                password.clear();
-                repeatPassword.clear();
-                Dialog dialog = new Dialog();
-                dialog.add("Что-то пошло не так, попробуйте еще раз");
-                dialog.open();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
         formLayout.add(username, oldPassword, password, repeatPassword, processButton);

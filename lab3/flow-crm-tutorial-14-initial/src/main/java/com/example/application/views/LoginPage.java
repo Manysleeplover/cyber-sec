@@ -16,6 +16,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 
 @Theme(themeFolder = "flowcrmtutorial")
 @PageTitle("Авторизация")
@@ -47,53 +49,57 @@ public class LoginPage extends VerticalLayout {
         processButton.setText("Войти");
         processButton.addClickListener(x -> {
             password.setHelperText("");
-            if (!listService.isDetected(username.getValue())) {
-                username.setInvalid(true);
-            } else {
-                if (loginService.getUserRole(username.getValue(), password.getValue()).equals("admin")) {
-                    if(password.getValue().equals("") || password.getValue()==null){
-                        getUI().get().navigate(ChangePasswordView.class);
+            try {
+                if (!listService.isDetected(username.getValue())) {
+                    username.setInvalid(true);
+                } else {
+                    if (loginService.getUserRole(username.getValue(), password.getValue()).equals("admin")) {
+                        if(password.getValue().equals("") || password.getValue()==null){
+                            getUI().get().navigate(ChangePasswordView.class);
+                        }
+                        UserSessionInfo.getInstance().setCurrentUser(loginService.getUser(username.getValue(), password.getValue()));
+                        getUI().get().navigate(AdminView.class);
                     }
-                    UserSessionInfo.getInstance().setCurrentUser(loginService.getUser(username.getValue(), password.getValue()));
-                    getUI().get().navigate(AdminView.class);
-                }
-                if (loginService.getUserRole(username.getValue(), password.getValue()).equals("user")) {
-                    if(password.getValue().equals("") || password.getValue()==null){
-                        getUI().get().navigate(ChangePasswordView.class);
-                    }
-                    User user = loginService.getUser(username.getValue(), password.getValue());
-                    if (user.getIsBlocked()) {
-                        Dialog dialog = new Dialog();
-                        dialog.add("Аккаунт заблокирован");
-                        dialog.open();
-                    } else {
-                        if (user.getPasswordRestriction()) {
-                            password.setHelperText("Символы не должны повторяться");
-                            if(loginService.validateUserPassword(password.getValue())){
+                    if (loginService.getUserRole(username.getValue(), password.getValue()).equals("user")) {
+                        if(password.getValue().equals("") || password.getValue()==null){
+                            getUI().get().navigate(ChangePasswordView.class);
+                        }
+                        User user = loginService.getUser(username.getValue(), password.getValue());
+                        if (user.getIsBlocked()) {
+                            Dialog dialog = new Dialog();
+                            dialog.add("Аккаунт заблокирован");
+                            dialog.open();
+                        } else {
+                            if (user.getPasswordRestriction()) {
+                                password.setHelperText("Символы не должны повторяться");
+                                if(loginService.validateUserPassword(password.getValue())){
+                                    UserSessionInfo.getInstance().setCurrentUser(user);
+                                    getUI().get().navigate(UserView.class);
+                                } else {
+                                    Button redirectButton = new Button();
+                                    redirectButton.addClickListener(event-> getUI().get().navigate(ChangePasswordView.class));
+                                    redirectButton.setText("Сменить пароль");
+                                    Dialog dialog = new Dialog();
+                                    dialog.add("Символы не должны повторяться");
+                                    dialog.add(redirectButton);
+                                    dialog.open();
+                                }
+                            } else {
                                 UserSessionInfo.getInstance().setCurrentUser(user);
                                 getUI().get().navigate(UserView.class);
-                            } else {
-                                Button redirectButton = new Button();
-                                redirectButton.addClickListener(event-> getUI().get().navigate(ChangePasswordView.class));
-                                redirectButton.setText("Сменить пароль");
-                                Dialog dialog = new Dialog();
-                                dialog.add("Символы не должны повторяться");
-                                dialog.add(redirectButton);
-                                dialog.open();
                             }
-                        } else {
-                            UserSessionInfo.getInstance().setCurrentUser(user);
-                            getUI().get().navigate(UserView.class);
                         }
                     }
+                    if (loginService.getUserRole(username.getValue(), password.getValue()).equals("none")) {
+                        username.clear();
+                        password.clear();
+                        Dialog dialog = new Dialog();
+                        dialog.add("Введён неврный пароль, пожалуйста, повторите попытку");
+                        dialog.open();
+                    }
                 }
-                if (loginService.getUserRole(username.getValue(), password.getValue()).equals("none")) {
-                    username.clear();
-                    password.clear();
-                    Dialog dialog = new Dialog();
-                    dialog.add("Введён неврный пароль, пожалуйста, повторите попытку");
-                    dialog.open();
-                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
         processButton.setAutofocus(true);

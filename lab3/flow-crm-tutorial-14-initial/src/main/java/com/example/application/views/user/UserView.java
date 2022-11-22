@@ -54,22 +54,26 @@ public class UserView extends VerticalLayout {
         repeatPassword.setRevealButtonVisible(false);
         processButton.setText("Изменить");
         processButton.addClickListener(x -> {
-            if (listService.isDetected(UserSessionInfo.getInstance().getCurrentUser().getUsername())) {
-                if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
-                    if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
-                        Dialog dialog = new Dialog();
-                        dialog.add("Пароль успешно изменён");
-                        dialog.open();
-                        getUI().get().navigate(LoginPage.class);
+            try {
+                if (listService.isDetected(UserSessionInfo.getInstance().getCurrentUser().getUsername())) {
+                    if (Objects.equals(password.getValue(), repeatPassword.getValue())) {
+                        if (loginService.changePassword(UserSessionInfo.getInstance().getCurrentUser().getUsername(), oldPassword.getValue(), password.getValue())) {
+                            Dialog dialog = new Dialog();
+                            dialog.add("Пароль успешно изменён");
+                            dialog.open();
+                            getUI().get().navigate(LoginPage.class);
+                        }
                     }
+                } else {
+                    oldPassword.clear();
+                    password.clear();
+                    repeatPassword.clear();
+                    Dialog dialog = new Dialog();
+                    dialog.add("Что-то пошло не так, попробуйте еще раз");
+                    dialog.open();
                 }
-            } else {
-                oldPassword.clear();
-                password.clear();
-                repeatPassword.clear();
-                Dialog dialog = new Dialog();
-                dialog.add("Что-то пошло не так, попробуйте еще раз");
-                dialog.open();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
         formLayout.add(oldPassword, password, repeatPassword, processButton);

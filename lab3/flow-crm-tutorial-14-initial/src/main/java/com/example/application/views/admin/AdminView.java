@@ -60,19 +60,27 @@ public class AdminView extends VerticalLayout {
             Paragraph p3 = new Paragraph();
             p3.add(submitButton);
             submitButton.addClickListener(event ->{
-                if(listService.isDetected(usernameField.getValue())){
-                    usernameField.setErrorMessage("Пользователь с таким именем уже существует");
-                    usernameField.setInvalid(true);
-                } else if (!usernameField.getValue().isEmpty() || !usernameField.getValue().equals("")){
-                    listService.addUser(usernameField.getValue());
-                    dialog.removeAll();
-                    dialog.add(new H3("Пользователь успешно добавлен"));
-                    userGrid.setItems(listService.getListWithUsers());
+                try {
+                    if(listService.isDetected(usernameField.getValue())){
+                        usernameField.setErrorMessage("Пользователь с таким именем уже существует");
+                        usernameField.setInvalid(true);
+                    } else if (!usernameField.getValue().isEmpty() || !usernameField.getValue().equals("")){
+                        listService.addUser(usernameField.getValue());
+                        dialog.removeAll();
+                        dialog.add(new H3("Пользователь успешно добавлен"));
+                        userGrid.setItems(listService.getListWithUsers());
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             });
             dialog.add(p1, p2, p3);
             dialog.open();
-            userGrid.setItems(listService.getListWithUsers());
+            try {
+                userGrid.setItems(listService.getListWithUsers());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
         });
     }
@@ -101,8 +109,16 @@ public class AdminView extends VerticalLayout {
             Button button = new Button();
             button.setText("Принять");
             button.addClickListener(y -> {
-                listService.changeParams(x.getItem(), selectBlock.getValue(), selectRestrict.getValue());
-                userGrid.setItems(listService.getListWithUsers());
+                try {
+                    listService.changeParams(x.getItem(), selectBlock.getValue(), selectRestrict.getValue());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    userGrid.setItems(listService.getListWithUsers());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 dialog.close();
             });
 
@@ -117,7 +133,11 @@ public class AdminView extends VerticalLayout {
             dialog.open();
         });
 
-        userGrid.setItems(listService.getListWithUsers());
+        try {
+            userGrid.setItems(listService.getListWithUsers());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

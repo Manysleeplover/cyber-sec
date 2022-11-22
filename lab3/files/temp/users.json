@@ -7,10 +7,10 @@
         "username": "admin"
     },
     {
-        "password": "user",
+        "password": "useru",
         "role": "user",
         "isBlocked": false,
-        "passwordRestriction": false,
+        "passwordRestriction": true,
         "username": "user"
     }
 ]}

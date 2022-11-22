@@ -64,7 +64,7 @@ public class ListService {
                 jsonArray.getJSONObject(i).put("isBlocked", Boolean.valueOf(isBl));
                 jsonArray.getJSONObject(i).put("passwordRestriction", Boolean.valueOf(resrtPswrd));
 
-                try (PrintWriter out = new PrintWriter(new FileWriter("src/main/resources/users.json"))) {
+                try (PrintWriter out = new PrintWriter(new FileWriter("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json"))) {
                     out.write(mainObject.toString(4));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -87,7 +87,7 @@ public class ListService {
         JSONArray jsonArray = mainObject.getJSONArray("users");
         jsonArray.put(new JSONObject(new User(username)));
 
-        try (PrintWriter out = new PrintWriter(new FileWriter("src/main/resources/users.json"))) {
+        try (PrintWriter out = new PrintWriter(new FileWriter("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json"))) {
             out.write(mainObject.toString(4));
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,7 +124,7 @@ public class ListService {
         try {
             json = String.join(" ",
                     Files.readAllLines(
-                            Paths.get("src/main/resources/users.json"),
+                            Paths.get("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json"),
                             StandardCharsets.UTF_8)
             );
         } catch (IOException e) {

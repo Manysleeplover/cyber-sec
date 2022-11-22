@@ -1,0 +1,16 @@
+{"users": [
+    {
+        "password": "admin",
+        "role": "admin",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "admin"
+    },
+    {
+        "password": "user",
+        "role": "user",
+        "isBlocked": false,
+        "passwordRestriction": false,
+        "username": "user"
+    }
+]}

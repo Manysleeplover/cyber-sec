@@ -51,10 +51,16 @@ public class LoginPage extends VerticalLayout {
                 username.setInvalid(true);
             } else {
                 if (loginService.getUserRole(username.getValue(), password.getValue()).equals("admin")) {
+                    if(password.getValue().equals("") || password.getValue()==null){
+                        getUI().get().navigate(ChangePasswordView.class);
+                    }
                     UserSessionInfo.getInstance().setCurrentUser(loginService.getUser(username.getValue(), password.getValue()));
                     getUI().get().navigate(AdminView.class);
                 }
                 if (loginService.getUserRole(username.getValue(), password.getValue()).equals("user")) {
+                    if(password.getValue().equals("") || password.getValue()==null){
+                        getUI().get().navigate(ChangePasswordView.class);
+                    }
                     User user = loginService.getUser(username.getValue(), password.getValue());
                     if (user.getIsBlocked()) {
                         Dialog dialog = new Dialog();

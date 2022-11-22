@@ -57,7 +57,7 @@ public class LoginService {
             if (jsonArray.getJSONObject(i).get("username").equals(username)
                     && jsonArray.getJSONObject(i).get("password").equals(oldPassword)) {
                 jsonArray.getJSONObject(i).put("password", newPassword);
-                try (PrintWriter out = new PrintWriter(new FileWriter("src/main/resources/users.json"))) {
+                try (PrintWriter out = new PrintWriter(new FileWriter("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json"))) {
                     out.write(mainObject.toString(4));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -152,7 +152,7 @@ public class LoginService {
         try {
             json = String.join(" ",
                     Files.readAllLines(
-                            Paths.get("src/main/resources/users.json"),
+                            Paths.get("/home/ioromanov/ideaProjects/cyber-sec/cyber-sec/lab3/files/temp/users.json"),
                             StandardCharsets.UTF_8)
             );
         } catch (IOException e) {
